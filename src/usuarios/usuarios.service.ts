@@ -10,23 +10,39 @@ export class UsuariosService {
     private prisma: PrismaService
   ) {}
   
-  create(createUsuarioDto: CreateUsuarioDto) {
-    return 'This action adds a new usuario';
+  async create(body:any) {
+    return await this.prisma.usuarios.create({
+      data: body
+    })
   }
 
-  findAll() {
-    return this.prisma.usuarios.findMany()
+  async findAll() {
+    return await this.prisma.usuarios.findMany({ 
+      orderBy:{ usuario_nombre: 'desc' }
+    })
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} usuario`;
+  async findOne(id: number) {
+    return await this.prisma.usuarios.findFirst({
+      where: { usuario_id: id }
+    })
   }
 
-  update(id: number, updateUsuarioDto: UpdateUsuarioDto) {
-    return `This action updates a #${id} usuario`;
+  async update(id: number, body: any) {
+    return await this.prisma.usuarios.update({
+      where: { usuario_id: id },
+      data: body
+    })
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} usuario`;
+  async remove(id: number) {
+    await this.prisma.usuarios.delete({
+      where: { usuario_id: id }
+    }) 
+    return { 
+      "exito": true,
+      "mensaje": "usuario eliminado",
+      "id": id
+    };
   }
 }
